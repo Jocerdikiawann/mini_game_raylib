@@ -17,20 +17,37 @@ int main() {
   Texture2D t_face = LoadTexture("Bg_Bright/tree_face.png");
   Vector2 face_pos = {0, 0};
 
-  Texture2D t_samurai = LoadTexture("Samurai/Idle.png");
-  Rectangle samurai_rec = {0.0f, 0.0f, (float)t_samurai.width / 6,
+  int num_frame_samurai = 8;
+  Texture2D t_samurai = LoadTexture("Samurai/Run.png");
+  Rectangle samurai_rec = {0.0f, 0.0f,
+                           (float)t_samurai.width / num_frame_samurai,
                            (float)t_samurai.height};
+
   SetTargetFPS(60);
 
+  unsigned int frame_delay = 5;
+  unsigned int frame_delay_counter = 0;
+  unsigned int frame_index = 0;
   while (!WindowShouldClose()) {
     int w = GetScreenWidth(), h = GetScreenHeight();
 
-    Vector2 samurai_pos = {(float)t_grass_and_road.width / 2 - t_samurai.width -
-                               100,
-                           (float)h / 2 - (float)t_samurai.height / 2 + 100};
+    Vector2 samurai_pos = {(float)w / 2, (float)h / 2};
+    // {(float)t_grass_and_road.width / 2 - t_samurai.width -
+    //                          100,
+    //                      (float)h / 2 - (float)t_samurai.height / 2 + 100};
 
-    grass_and_road_pos.x += GetFrameTime() * 100;
-    face_pos.x += GetFrameTime() * 100;
+    if (IsKeyDown(KEY_RIGHT)) {
+      grass_and_road_pos.x += GetFrameTime() * 100;
+      face_pos.x += GetFrameTime() * 100;
+
+      ++frame_delay_counter;
+      if (frame_delay_counter >= frame_delay) {
+        frame_delay_counter = 0;
+        ++frame_index;
+        frame_index %= num_frame_samurai;
+        samurai_rec.x = (float)frame_index * samurai_rec.width;
+      }
+    }
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
