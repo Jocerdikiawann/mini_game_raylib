@@ -8,28 +8,42 @@ int main() {
   ChangeDirectory("./assets/");
 
   InitWindow(fullWidth, fullHeight, "Game");
+  // Load the textures
   Texture2D t_sky = LoadTexture("Bg_Bright/sky.png");
-  Vector2 sky_pos = {0, 0};
-
-  Texture2D t_grass_and_road = LoadTexture("Bg_Bright/grass&road.png");
-  Vector2 grass_and_road_pos = {0, 0};
-
-  Texture2D t_face = LoadTexture("Bg_Bright/tree_face.png");
-  Vector2 face_pos = {0, 0};
-
-  int num_frame_samurai = 8;
   Texture2D t_samurai = LoadTexture("Samurai/Run.png");
   Texture2D t_samurai_idle = LoadTexture("Samurai/Idle.png");
   Texture2D t_samurai_jump = LoadTexture("Samurai/Jump.png");
-  Rectangle samurai_rec = {0.0f, 0.0f,
-                           (float)t_samurai.width / num_frame_samurai,
-                           (float)t_samurai.height};
+  Texture2D t_grass_and_road = LoadTexture("Bg_Bright/grass&road.png");
+  Texture2D t_face = LoadTexture("Bg_Bright/tree_face.png");
 
-  SetTargetFPS(60);
+  // Set position of the textures
+  Vector2 face_pos = {0, 0};
+  Vector2 grass_and_road_pos = {0, 0};
+  Vector2 sky_pos = {0, 0};
 
+  // Set the frame of the samurai
+  int num_frame_samurai = 8, num_frame_samurai_idle = 6;
   unsigned int frame_delay = 5;
   unsigned int frame_delay_counter = 0;
   unsigned int frame_index = 0;
+
+  // Set the rectangle of the samurai
+  Rectangle samurai_rec_idle = {
+      0.0f,
+      0.0f,
+      (float)t_samurai_idle.width / num_frame_samurai_idle,
+      (float)t_samurai_idle.height,
+  };
+  Rectangle samurai_rec = {
+      0.0f,
+      0.0f,
+      (float)t_samurai.width / num_frame_samurai,
+      (float)t_samurai.height,
+  };
+
+  SetTargetFPS(60);
+
+  // Main loop
   while (!WindowShouldClose()) {
     int w = GetScreenWidth(), h = GetScreenHeight();
 
