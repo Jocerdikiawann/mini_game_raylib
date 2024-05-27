@@ -12,17 +12,24 @@ int main() {
 
   Music music = LoadMusicStream("music/background_music.ogg");
   // Load the textures
-  Texture2D t_sky = LoadTexture("Bg_Bright/sky.png");
   Texture2D t_samurai = LoadTexture("Samurai/Run.png");
   Texture2D t_samurai_idle = LoadTexture("Samurai/Idle.png");
   Texture2D t_samurai_jump = LoadTexture("Samurai/Jump.png");
+
+  Texture2D t_sky = LoadTexture("Bg_Bright/sky.png");
   Texture2D t_grass_and_road = LoadTexture("Bg_Bright/grass&road.png");
   Texture2D t_face = LoadTexture("Bg_Bright/tree_face.png");
+  Texture2D t_grass = LoadTexture("Bg_Bright/grasses.png");
+  Texture2D t_jungle_bg = LoadTexture("Bg_Bright/jungle_bg.png");
+  Texture2D t_tree_and_bushes = LoadTexture("Bg_Bright/tree&bushes.png");
 
   // Set position of the textures
   Vector2 face_pos = {0, 0};
   Vector2 grass_and_road_pos = {0, 0};
   Vector2 sky_pos = {0, 0};
+  Vector2 grass_pos = {0, 0};
+  Vector2 jungle_bg_pos = {0, 0};
+  Vector2 tree_and_bushes_pos = {0, 0};
 
   // Set the frame of the samurai
   int num_frame_samurai = 8, num_frame_samurai_idle = 6;
@@ -54,15 +61,28 @@ int main() {
     int w = GetScreenWidth(), h = GetScreenHeight();
 
     Vector2 samurai_pos = {(float)t_samurai.width * .2f, (float)h * .6f};
-    // {(float)t_grass_and_road.width / 2 - t_samurai.width -
-    //                          100,
-    //                      (float)h / 2 - (float)t_samurai.height / 2 + 100};
+    Vector2 samurai_idle_pos = {(float)t_samurai_idle.width * .2f,
+                                (float)h * .6f};
+
+    // Bug: if key left pressed samurai stop moving
+    if (!IsKeyPressed(1)) {
+      ++frame_delay_counter;
+      if (frame_delay_counter >= frame_delay) {
+        frame_delay_counter = 0;
+        ++frame_index;
+        frame_index %= num_frame_samurai_idle;
+        samurai_rec_idle.x = (float)frame_index * samurai_rec_idle.width;
+      }
+    }
 
     if (IsKeyDown(KEY_RIGHT)) {
       if (samurai_rec.width < 0)
         samurai_rec.width = -samurai_rec.width;
       grass_and_road_pos.x += GetFrameTime() * 100;
       face_pos.x += GetFrameTime() * 100;
+      grass_pos.x += GetFrameTime() * 100;
+      jungle_bg_pos.x += GetFrameTime() * 100;
+      tree_and_bushes_pos.x += GetFrameTime() * 100;
 
       ++frame_delay_counter;
       if (frame_delay_counter >= frame_delay) {
@@ -77,6 +97,9 @@ int main() {
         samurai_rec.width = -samurai_rec.width;
       grass_and_road_pos.x -= GetFrameTime() * 100;
       face_pos.x -= GetFrameTime() * 100;
+      grass_pos.x -= GetFrameTime() * 100;
+      jungle_bg_pos.x -= GetFrameTime() * 100;
+      tree_and_bushes_pos.x -= GetFrameTime() * 100;
 
       ++frame_delay_counter;
       if (frame_delay_counter >= frame_delay) {
@@ -92,6 +115,17 @@ int main() {
     DrawTexturePro(t_sky, (Rectangle){0, 0, t_sky.width, t_sky.height},
                    (Rectangle){sky_pos.x, sky_pos.y, w, h}, (Vector2){0, 0}, 0,
                    WHITE);
+    DrawTexturePro(
+        t_jungle_bg,
+        (Rectangle){jungle_bg_pos.x, jungle_bg_pos.y, w, t_jungle_bg.height},
+        (Rectangle){0, 0, w, h}, (Vector2){0, 0}, 0, WHITE);
+    DrawTexturePro(t_tree_and_bushes,
+                   (Rectangle){tree_and_bushes_pos.x, tree_and_bushes_pos.y, w,
+                               t_tree_and_bushes.height},
+                   (Rectangle){0, 0, w, h}, (Vector2){0, 0}, 0, WHITE);
+    DrawTexturePro(t_grass,
+                   (Rectangle){grass_pos.x, grass_pos.y, w, t_grass.height},
+                   (Rectangle){0, 0, w, h}, (Vector2){0, 0}, 0, WHITE);
     DrawTexturePro(t_grass_and_road,
                    (Rectangle){grass_and_road_pos.x, grass_and_road_pos.y, w,
                                t_grass_and_road.height},
@@ -101,7 +135,12 @@ int main() {
                    (Rectangle){0, 0, w, h}, (Vector2){0, 0}, 0, WHITE);
 
     // Center of the t_grass_and_road
-    DrawTextureRec(t_samurai, samurai_rec, samurai_pos, WHITE);
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_LEFT)) {
+      DrawTextureRec(t_samurai, samurai_rec, samurai_pos, WHITE);
+    } else {
+      DrawTextureRec(t_samurai_idle, samurai_rec_idle, samurai_idle_pos, WHITE);
+    }
+    // DrawTextureRec(t_samurai, samurai_rec, samurai_pos, WHITE);
     EndDrawing();
   }
 
