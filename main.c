@@ -21,7 +21,7 @@ int main() {
   Texture2D t_face = LoadTexture("Bg_Bright/tree_face.png");
   Texture2D t_grass = LoadTexture("Bg_Bright/grasses.png");
   Texture2D t_jungle_bg = LoadTexture("Bg_Bright/jungle_bg.png");
-  Texture2D t_tree_and_bushes = LoadTexture("Bg_Bright/tree&bushes.png");
+  Texture2D t_tree_and_bushes = LoadTexture("Bg_Bright/trees&bushes.png");
 
   // Set position of the textures
   Vector2 face_pos = {0, 0};
@@ -64,17 +64,6 @@ int main() {
     Vector2 samurai_idle_pos = {(float)t_samurai_idle.width * .2f,
                                 (float)h * .6f};
 
-    // Bug: if key left pressed samurai stop moving
-    if (!IsKeyPressed(1)) {
-      ++frame_delay_counter;
-      if (frame_delay_counter >= frame_delay) {
-        frame_delay_counter = 0;
-        ++frame_index;
-        frame_index %= num_frame_samurai_idle;
-        samurai_rec_idle.x = (float)frame_index * samurai_rec_idle.width;
-      }
-    }
-
     if (IsKeyDown(KEY_RIGHT)) {
       if (samurai_rec.width < 0)
         samurai_rec.width = -samurai_rec.width;
@@ -91,8 +80,7 @@ int main() {
         frame_index %= num_frame_samurai;
         samurai_rec.x = (float)frame_index * samurai_rec.width;
       }
-    }
-    if (IsKeyDown(KEY_LEFT)) {
+    } else if (IsKeyDown(KEY_LEFT)) {
       if (samurai_rec.width > 0)
         samurai_rec.width = -samurai_rec.width;
       grass_and_road_pos.x -= GetFrameTime() * 100;
@@ -104,9 +92,20 @@ int main() {
       ++frame_delay_counter;
       if (frame_delay_counter >= frame_delay) {
         frame_delay_counter = 0;
-        --frame_index;
-        frame_index %= num_frame_samurai;
+        if (frame_index == 0) {
+          frame_index = num_frame_samurai - 1;
+        } else {
+          --frame_index;
+        }
         samurai_rec.x = (float)frame_index * samurai_rec.width;
+      }
+    } else {
+      ++frame_delay_counter;
+      if (frame_delay_counter >= frame_delay) {
+        frame_delay_counter = 0;
+        ++frame_index;
+        frame_index %= num_frame_samurai_idle;
+        samurai_rec_idle.x = (float)frame_index * samurai_rec_idle.width;
       }
     }
 
@@ -140,7 +139,6 @@ int main() {
     } else {
       DrawTextureRec(t_samurai_idle, samurai_rec_idle, samurai_idle_pos, WHITE);
     }
-    // DrawTextureRec(t_samurai, samurai_rec, samurai_pos, WHITE);
     EndDrawing();
   }
 
