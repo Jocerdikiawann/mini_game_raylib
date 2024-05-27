@@ -8,6 +8,9 @@ int main() {
   ChangeDirectory("./assets/");
 
   InitWindow(fullWidth, fullHeight, "Game");
+  InitAudioDevice();
+
+  Music music = LoadMusicStream("music/background_music.ogg");
   // Load the textures
   Texture2D t_sky = LoadTexture("Bg_Bright/sky.png");
   Texture2D t_samurai = LoadTexture("Samurai/Run.png");
@@ -41,10 +44,13 @@ int main() {
       (float)t_samurai.height,
   };
 
+  PlayMusicStream(music);
+
   SetTargetFPS(60);
 
   // Main loop
   while (!WindowShouldClose()) {
+    UpdateMusicStream(music);
     int w = GetScreenWidth(), h = GetScreenHeight();
 
     Vector2 samurai_pos = {(float)t_samurai.width * .2f, (float)h * .6f};
@@ -103,6 +109,8 @@ int main() {
   UnloadTexture(t_grass_and_road);
   UnloadTexture(t_face);
   UnloadTexture(t_samurai);
+  UnloadMusicStream(music);
+  CloseAudioDevice();
 
   CloseWindow();
   return 0;
