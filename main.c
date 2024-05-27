@@ -33,7 +33,7 @@ int main() {
   while (!WindowShouldClose()) {
     int w = GetScreenWidth(), h = GetScreenHeight();
 
-    Vector2 samurai_pos = {(float)w / 2, (float)h / 2};
+    Vector2 samurai_pos = {(float)t_samurai.width * .2f, (float)h * .6f};
     // {(float)t_grass_and_road.width / 2 - t_samurai.width -
     //                          100,
     //                      (float)h / 2 - (float)t_samurai.height / 2 + 100};
@@ -61,7 +61,7 @@ int main() {
       ++frame_delay_counter;
       if (frame_delay_counter >= frame_delay) {
         frame_delay_counter = 0;
-        ++frame_index;
+        --frame_index;
         frame_index %= num_frame_samurai;
         samurai_rec.x = (float)frame_index * samurai_rec.width;
       }
