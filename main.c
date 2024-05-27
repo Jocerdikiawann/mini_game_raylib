@@ -19,6 +19,8 @@ int main() {
 
   int num_frame_samurai = 8;
   Texture2D t_samurai = LoadTexture("Samurai/Run.png");
+  Texture2D t_samurai_idle = LoadTexture("Samurai/Idle.png");
+  Texture2D t_samurai_jump = LoadTexture("Samurai/Jump.png");
   Rectangle samurai_rec = {0.0f, 0.0f,
                            (float)t_samurai.width / num_frame_samurai,
                            (float)t_samurai.height};
@@ -37,8 +39,24 @@ int main() {
     //                      (float)h / 2 - (float)t_samurai.height / 2 + 100};
 
     if (IsKeyDown(KEY_RIGHT)) {
+      if (samurai_rec.width < 0)
+        samurai_rec.width = -samurai_rec.width;
       grass_and_road_pos.x += GetFrameTime() * 100;
       face_pos.x += GetFrameTime() * 100;
+
+      ++frame_delay_counter;
+      if (frame_delay_counter >= frame_delay) {
+        frame_delay_counter = 0;
+        ++frame_index;
+        frame_index %= num_frame_samurai;
+        samurai_rec.x = (float)frame_index * samurai_rec.width;
+      }
+    }
+    if (IsKeyDown(KEY_LEFT)) {
+      if (samurai_rec.width > 0)
+        samurai_rec.width = -samurai_rec.width;
+      grass_and_road_pos.x -= GetFrameTime() * 100;
+      face_pos.x -= GetFrameTime() * 100;
 
       ++frame_delay_counter;
       if (frame_delay_counter >= frame_delay) {
