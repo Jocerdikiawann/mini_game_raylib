@@ -1,8 +1,7 @@
 #include "background.h"
 #include <raylib.h>
-#include <stdio.h>
 
-Backgrounds *initiate_backgrounds() {
+Backgrounds initiate_backgrounds() {
   // read path assets/background/*
 
   int w = GetScreenWidth(), h = GetScreenHeight();
@@ -27,5 +26,14 @@ Backgrounds *initiate_backgrounds() {
   UnloadDirectoryFiles(sub_dirs);
   UnloadDirectoryFiles(path_list);
 
-  return NULL;
+  return background;
+}
+
+void destroy_background(Backgrounds *background) {
+  for (int i = 0; i < background->count; ++i) {
+    UnloadTexture(background->items[i].texture);
+  }
+  free(background->items);
+  background->items = NULL;
+  background->count = background->capacity = 0;
 }
