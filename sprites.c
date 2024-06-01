@@ -1,5 +1,4 @@
 #include "sprites.h"
-#include <stdlib.h>
 
 // Todo:
 // - Get file from assets, load every sprites

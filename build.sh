@@ -27,7 +27,7 @@ if [ "$Platform" = "web" ] ; then
     emrun ./web/main.html
 elif [ "$Platform" = "desktop" ] ; then
   echo "Building for desktop..."
-  gcc -g ./main.c -o ./game -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+  gcc -g ./*.c -o ./game -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
   ./game
 else
     echo "Invalid platform: $Platform"

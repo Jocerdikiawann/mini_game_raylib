@@ -4,12 +4,16 @@
 
 typedef struct {
   Texture2D texture;
-  Vector2 position;
   Rectangle source;
   Rectangle destination;
 } Background;
 
-Background *initiate_backgrounds();
+typedef struct {
+  Background *items;
+  size_t count, capacity;
+} Backgrounds;
+
+Backgrounds *initiate_backgrounds();
 void draw_background(Background *background);
 void update_background(Background *background, int screenwidth,
                        int screenheight);

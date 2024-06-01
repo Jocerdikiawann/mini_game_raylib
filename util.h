@@ -1,6 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 #include <raylib.h>
+#include <stdlib.h>
 
 #define append(v, d)                                                           \
   do {                                                                         \

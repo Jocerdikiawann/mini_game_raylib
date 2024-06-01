@@ -1,3 +1,4 @@
+#include "background.h"
 #include <raylib.h>
 
 int main() {
@@ -55,6 +56,8 @@ int main() {
 
   SetTargetFPS(60);
 
+  initiate_backgrounds();
+
   // Main loop
   while (!WindowShouldClose()) {
     UpdateMusicStream(music);
@@ -111,6 +114,7 @@ int main() {
 
     BeginDrawing();
     ClearBackground(RAYWHITE);
+
     DrawTexturePro(t_sky, (Rectangle){0, 0, t_sky.width, t_sky.height},
                    (Rectangle){sky_pos.x, sky_pos.y, w, h}, (Vector2){0, 0}, 0,
                    WHITE);
