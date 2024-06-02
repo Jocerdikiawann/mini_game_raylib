@@ -9,16 +9,17 @@ typedef struct {
   int num_frames;
 } Sprite;
 
-Sprite *initiate_heros_sprite();
-Sprite *initiate_villains_sprite();
+typedef struct {
+  Sprite *items;
+  size_t count, capacity;
+} Sprites;
+
+Sprites initiate_heros_sprite();
+Sprites initiate_villains_sprite();
 Sprite set_current_sprite(int index);
+
 void draw_sprite(Sprite *sprite);
-void update_sprite(Sprite *sprite, int screenwidth, int screenheight);
-void destroy_sprite(Sprite *sprite);
-
-void move_right_sprite(Sprite *sprite);
-void move_left_sprite(Sprite *sprite);
-void idle_sprite(Sprite *sprite);
-void jump_sprite(Sprite *sprite);
-
+void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
+                   Instruction instruction, Frame *frame);
+void destroy_sprite(Sprites *sprite);
 #endif

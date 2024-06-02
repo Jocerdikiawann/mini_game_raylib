@@ -3,6 +3,20 @@
 #include <raylib.h>
 #include <stdlib.h>
 
+typedef enum {
+  MOVE_LEFT,
+  MOVE_RIGHT,
+  JUMP,
+  ATTACK,
+  HURT,
+  DEFEND,
+  IDLE,
+} Instruction;
+
+typedef struct {
+  size_t frame_delay, frame_delay_counter, frame_index;
+} Frame;
+
 #define append(v, d)                                                           \
   do {                                                                         \
     if (v.count >= v.capacity) {                                               \

@@ -14,9 +14,9 @@ typedef struct {
 } Backgrounds;
 
 Backgrounds initiate_backgrounds();
-void draw_background(Background *background);
-void update_background(Background *background, int screenwidth,
-                       int screenheight);
+void update_background(Backgrounds *background, int screenwidth,
+                       int screenheight, Instruction instruction);
+void draw_background(Backgrounds *background);
 void destroy_background(Backgrounds *background);
 
 #endif // !BACKGROUND_H

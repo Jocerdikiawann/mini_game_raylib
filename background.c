@@ -1,4 +1,5 @@
 #include "background.h"
+#include "util.h"
 #include <raylib.h>
 
 Backgrounds initiate_backgrounds() {
@@ -27,6 +28,25 @@ Backgrounds initiate_backgrounds() {
   UnloadDirectoryFiles(path_list);
 
   return background;
+}
+
+void update_background(Backgrounds *background, int screenwidth,
+                       int screenheight, Instruction instruction) {
+  for (int i = 0; i < background->count; ++i) {
+    if (instruction == MOVE_LEFT)
+      background->items[i].source.x -= GetFrameTime() * 100;
+    if (instruction == MOVE_RIGHT)
+      background->items[i].source.x += GetFrameTime() * 100;
+  }
+}
+
+void draw_background(Backgrounds *background) {
+  BeginDrawing();
+  for (int i = 0; i < background->count; ++i) {
+    DrawTexturePro(background->items[i].texture, background->items[i].source,
+                   background->items[i].destination, (Vector2){0, 0}, 0, WHITE);
+  }
+  EndDrawing();
 }
 
 void destroy_background(Backgrounds *background) {
