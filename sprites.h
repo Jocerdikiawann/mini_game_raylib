@@ -7,6 +7,7 @@ typedef struct {
   Vector2 position;
   Rectangle frame_rec;
   int num_frames;
+  Instruction condition;
 } Sprite;
 
 typedef struct {
@@ -16,7 +17,9 @@ typedef struct {
 
 Sprites initiate_heros_sprite();
 Sprites initiate_villains_sprite();
-Sprite set_current_sprite(int index);
+Sprite set_current_sprite(Sprites *sprites, int index);
+Sprite select_texture_sprite_by_condition(Sprites *sprites,
+                                          Instruction condition);
 
 void draw_sprite(Sprite *sprite);
 void update_sprite(Sprite *sprite, int screenwidth, int screenheight,

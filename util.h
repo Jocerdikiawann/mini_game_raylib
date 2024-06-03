@@ -14,7 +14,7 @@ typedef enum {
 } Instruction;
 
 typedef struct {
-  size_t frame_delay, frame_delay_counter, frame_index;
+  unsigned int frame_delay, frame_delay_counter, frame_index;
 } Frame;
 
 #define append(v, d)                                                           \

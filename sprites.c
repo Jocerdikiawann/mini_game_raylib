@@ -1,10 +1,12 @@
 #include "sprites.h"
+#include "util.h"
+#include <stdio.h>
 
 // Todo:
 // - Get file from assets, load every sprites
 // - Set Type Sprite [Hero | Villain]
 // - Set Current Sprites
-Sprite create_sprite(char *filename, int num_frames) {
+Sprite create_sprite(char *filename, int num_frames, Instruction condition) {
   Sprite sprite;
   const char *path = TextFormat("%s/%s", GetWorkingDirectory(), filename);
   sprite.texture = LoadTexture(path);
@@ -14,6 +16,7 @@ Sprite create_sprite(char *filename, int num_frames) {
       (Rectangle){0.0f, 0.0f, (float)sprite.texture.width / num_frames,
                   (float)sprite.texture.height};
   sprite.num_frames = num_frames;
+  sprite.condition = condition;
   return sprite;
 }
 
@@ -21,38 +24,64 @@ Sprite create_sprite(char *filename, int num_frames) {
 Sprites initiate_heros_sprite() {
   Sprites sprites = {};
   // TODO: Loop sprites soon
-  append(sprites, create_sprite("Samurai/Idle.png", 6));
-  append(sprites, create_sprite("Samurai/Run.png", 8));
+  append(sprites, create_sprite("sprites/Samurai/Idle.png", 6, IDLE));
+  append(sprites, create_sprite("sprites/Samurai/Run.png", 8, MOVE_RIGHT));
   return sprites;
 }
 
+Sprites initiate_villains_sprite() {
+  Sprites sprites = {};
+  return sprites;
+}
+
+Sprite set_current_sprite(Sprites *sprites, int index) { return (Sprite){}; }
+
+Sprite select_texture_sprite_by_condition(Sprites *sprites,
+                                          Instruction condition) {
+  Sprite sprite = {};
+  for (int i = 0; i < sprites->count; ++i) {
+    if (sprites->items[i].condition == condition) {
+      sprite = sprites->items[i];
+      break;
+    }
+  }
+  return sprite;
+}
 void draw_sprite(Sprite *sprite) {
-  BeginDrawing();
-  // Draw the condition of the sprite [Idle | Run | Jump | Attack | Hurt |
-  // Defend]
   DrawTextureRec(sprite->texture, sprite->frame_rec, sprite->position, WHITE);
-  EndDrawing();
 }
 
 void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
                    Instruction instruction, Frame *frame) {
+  sprite->position =
+      (Vector2){sprite->texture.width * .2f, (float)screenheight * .6f};
+
   switch (instruction) {
+  case MOVE_RIGHT:
+    if (sprite->frame_rec.width < 0)
+      sprite->frame_rec.width = -sprite->frame_rec.width;
+    ++frame->frame_delay_counter;
+    if (frame->frame_delay_counter >= frame->frame_delay) {
+      frame->frame_delay_counter = 0;
+      ++frame->frame_index;
+      frame->frame_index %= sprite->num_frames;
+      sprite->frame_rec.x = frame->frame_index * sprite->frame_rec.width;
+    }
+    break;
   case MOVE_LEFT:
     if (sprite->frame_rec.width > 0)
       sprite->frame_rec.width = -sprite->frame_rec.width;
     ++frame->frame_delay_counter;
     if (frame->frame_delay_counter >= frame->frame_delay) {
       frame->frame_delay_counter = 0;
-      if (--frame->frame_index < 0)
+      if (frame->frame_index == 0)
         frame->frame_index = sprite->num_frames - 1;
       else
         --frame->frame_index;
       sprite->frame_rec.x = frame->frame_index * sprite->frame_rec.width;
     }
     break;
-  case MOVE_RIGHT:
-    if (sprite->frame_rec.width < 0)
-      sprite->frame_rec.width = -sprite->frame_rec.width;
+  case IDLE:
     ++frame->frame_delay_counter;
     if (frame->frame_delay_counter >= frame->frame_delay) {
       frame->frame_delay_counter = 0;
@@ -65,20 +94,9 @@ void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
     break;
   case ATTACK:
     break;
-  case IDLE:
-    ++frame->frame_delay_counter;
-    if (frame->frame_delay_counter >= frame->frame_delay) {
-      frame->frame_delay_counter = 0;
-      ++frame->frame_index;
-      frame->frame_index %= sprite->num_frames;
-      sprite->frame_rec.x = frame->frame_index * sprite->frame_rec.width;
-    }
-    break;
-  case HURT:
-    break;
   case DEFEND:
     break;
-  default:
+  case HURT:
     break;
   }
 }
