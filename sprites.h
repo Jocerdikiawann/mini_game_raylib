@@ -17,9 +17,9 @@ typedef struct {
 
 Sprites initiate_heros_sprite();
 Sprites initiate_villains_sprite();
-Sprite set_current_sprite(Sprites *sprites, int index);
-Sprite select_texture_sprite_by_condition(Sprites *sprites,
-                                          Instruction condition);
+void set_current_sprite(Sprites *sprites, Sprite *current, int index);
+void select_texture_sprite_by_condition(Sprites *sprites, Sprite *current,
+                                        Instruction condition);
 
 void draw_sprite(Sprite *sprite);
 void update_sprite(Sprite *sprite, int screenwidth, int screenheight,

@@ -1,6 +1,6 @@
 #include "sprites.h"
 #include "util.h"
-#include <stdio.h>
+#include <string.h>
 
 // Todo:
 // - Get file from assets, load every sprites
@@ -34,20 +34,23 @@ Sprites initiate_villains_sprite() {
   return sprites;
 }
 
-Sprite set_current_sprite(Sprites *sprites, int index) { return (Sprite){}; }
+void set_current_sprite(Sprites *sprites, Sprite *current, int index) {
+  memcpy(current, &sprites->items[index], sizeof(Sprites));
+}
 
-Sprite select_texture_sprite_by_condition(Sprites *sprites,
-                                          Instruction condition) {
-  Sprite sprite = {};
+// NOTE: Don't use
+void select_texture_sprite_by_condition(Sprites *sprites, Sprite *current,
+                                        Instruction condition) {
   for (int i = 0; i < sprites->count; ++i) {
     if (sprites->items[i].condition == condition) {
-      sprite = sprites->items[i];
+      memcpy(current, &sprites->items[i], sizeof(Sprite));
       break;
     }
   }
-  return sprite;
 }
+
 void draw_sprite(Sprite *sprite) {
+
   DrawTextureRec(sprite->texture, sprite->frame_rec, sprite->position, WHITE);
 }
 
@@ -60,12 +63,13 @@ void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
   case MOVE_RIGHT:
     if (sprite->frame_rec.width < 0)
       sprite->frame_rec.width = -sprite->frame_rec.width;
+
     ++frame->frame_delay_counter;
     if (frame->frame_delay_counter >= frame->frame_delay) {
       frame->frame_delay_counter = 0;
       ++frame->frame_index;
       frame->frame_index %= sprite->num_frames;
-      sprite->frame_rec.x = frame->frame_index * sprite->frame_rec.width;
+      sprite->frame_rec.x = (float)frame->frame_index * sprite->frame_rec.width;
     }
     break;
   case MOVE_LEFT:
@@ -78,7 +82,7 @@ void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
         frame->frame_index = sprite->num_frames - 1;
       else
         --frame->frame_index;
-      sprite->frame_rec.x = frame->frame_index * sprite->frame_rec.width;
+      sprite->frame_rec.x = (float)frame->frame_index * sprite->frame_rec.width;
     }
     break;
   case IDLE:
@@ -87,7 +91,7 @@ void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
       frame->frame_delay_counter = 0;
       ++frame->frame_index;
       frame->frame_index %= sprite->num_frames;
-      sprite->frame_rec.x = frame->frame_index * sprite->frame_rec.width;
+      sprite->frame_rec.x = (float)frame->frame_index * sprite->frame_rec.width;
     }
     break;
   case JUMP:

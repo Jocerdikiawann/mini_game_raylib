@@ -1,7 +1,9 @@
 #ifndef UTIL_H
 #define UTIL_H
 #include <raylib.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef enum {
   MOVE_LEFT,
