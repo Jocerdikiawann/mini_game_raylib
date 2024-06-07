@@ -1,5 +1,6 @@
 #include "sprites.h"
 #include "util.h"
+#include <raylib.h>
 #include <string.h>
 
 // Todo:
@@ -26,6 +27,7 @@ Sprites initiate_heros_sprite() {
   // TODO: Loop sprites soon
   append(sprites, create_sprite("sprites/Samurai/Idle.png", 6, IDLE));
   append(sprites, create_sprite("sprites/Samurai/Run.png", 8, MOVE_RIGHT));
+  append(sprites, create_sprite("sprites/Samurai/Jump.png", 9, JUMP));
   return sprites;
 }
 
@@ -59,8 +61,8 @@ void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
   sprite->position =
       (Vector2){sprite->texture.width * .2f, (float)screenheight * .6f};
 
-  switch (instruction) {
-  case MOVE_RIGHT:
+  switch (GetKeyPressed()) {
+  case KEY_RIGHT:
     if (sprite->frame_rec.width < 0)
       sprite->frame_rec.width = -sprite->frame_rec.width;
 
@@ -72,9 +74,10 @@ void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
       sprite->frame_rec.x = (float)frame->frame_index * sprite->frame_rec.width;
     }
     break;
-  case MOVE_LEFT:
+  case KEY_LEFT:
     if (sprite->frame_rec.width > 0)
       sprite->frame_rec.width = -sprite->frame_rec.width;
+
     ++frame->frame_delay_counter;
     if (frame->frame_delay_counter >= frame->frame_delay) {
       frame->frame_delay_counter = 0;
@@ -85,7 +88,11 @@ void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
       sprite->frame_rec.x = (float)frame->frame_index * sprite->frame_rec.width;
     }
     break;
-  case IDLE:
+
+  case KEY_SPACE:
+    if (sprite->frame_rec.width < 0)
+      sprite->frame_rec.width = -sprite->frame_rec.width;
+
     ++frame->frame_delay_counter;
     if (frame->frame_delay_counter >= frame->frame_delay) {
       frame->frame_delay_counter = 0;
@@ -94,13 +101,14 @@ void update_sprite(Sprite *sprite, int screenwidth, int screenheight,
       sprite->frame_rec.x = (float)frame->frame_index * sprite->frame_rec.width;
     }
     break;
-  case JUMP:
-    break;
-  case ATTACK:
-    break;
-  case DEFEND:
-    break;
-  case HURT:
+  default:
+    ++frame->frame_delay_counter;
+    if (frame->frame_delay_counter >= frame->frame_delay) {
+      frame->frame_delay_counter = 0;
+      ++frame->frame_index;
+      frame->frame_index %= sprite->num_frames;
+      sprite->frame_rec.x = (float)frame->frame_index * sprite->frame_rec.width;
+    }
     break;
   }
 }

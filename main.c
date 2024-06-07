@@ -1,5 +1,6 @@
 #include "background.h"
 #include "sprites.h"
+#include "util.h"
 #include <raylib.h>
 
 int main() {
@@ -29,69 +30,27 @@ int main() {
     UpdateMusicStream(music);
     int w = GetScreenWidth(), h = GetScreenHeight();
 
-    // if (IsKeyDown(KEY_RIGHT)) {
-    //   if (samurai_rec.width < 0)
-    //     samurai_rec.width = -samurai_rec.width;
-    //   grass_and_road_pos.x += GetFrameTime() * 100;
-    //   face_pos.x += GetFrameTime() * 100;
-    //   grass_pos.x += GetFrameTime() * 100;
-    //   jungle_bg_pos.x += GetFrameTime() * 100;
-    //   tree_and_bushes_pos.x += GetFrameTime() * 100;
-
-    //   ++frame_delay_counter;
-    //   if (frame_delay_counter >= frame_delay) {
-    //     frame_delay_counter = 0;
-    //     ++frame_index;
-    //     frame_index %= num_frame_samurai;
-    //     samurai_rec.x = (float)frame_index * samurai_rec.width;
-    //   }
-    // } else if (IsKeyDown(KEY_LEFT)) {
-    //   if (samurai_rec.width > 0)
-    //     samurai_rec.width = -samurai_rec.width;
-    //   grass_and_road_pos.x -= GetFrameTime() * 100;
-    //   face_pos.x -= GetFrameTime() * 100;
-    //   grass_pos.x -= GetFrameTime() * 100;
-    //   jungle_bg_pos.x -= GetFrameTime() * 100;
-    //   tree_and_bushes_pos.x -= GetFrameTime() * 100;
-
-    //   ++frame_delay_counter;
-    //   if (frame_delay_counter >= frame_delay) {
-    //     frame_delay_counter = 0;
-    //     if (frame_index == 0) {
-    //       frame_index = num_frame_samurai - 1;
-    //     } else {
-    //       --frame_index;
-    //     }
-    //     samurai_rec.x = (float)frame_index * samurai_rec.width;
-    //   }
-    // } else {
-    //   ++frame_delay_counter;
-    //   if (frame_delay_counter >= frame_delay) {
-    //     frame_delay_counter = 0;
-    //     ++frame_index;
-    //     frame_index %= num_frame_samurai_idle;
-    //     samurai_rec_idle.x = (float)frame_index * samurai_rec_idle.width;
-    //   }
-    // }
-
     BeginDrawing();
     ClearBackground(RAYWHITE);
 
     if (IsKeyDown(KEY_RIGHT)) {
       update_background(&background, w, h, MOVE_RIGHT);
       set_current_sprite(&sprites, &current_sprite, 1);
-      update_sprite(&current_sprite, w, h, MOVE_RIGHT, &frame);
     } else if (IsKeyDown(KEY_LEFT)) {
       update_background(&background, w, h, MOVE_LEFT);
       set_current_sprite(&sprites, &current_sprite, 1);
-      update_sprite(&current_sprite, w, h, MOVE_LEFT, &frame);
+    } else if (IsKeyDown(KEY_SPACE)) {
+      update_background(&background, w, h, JUMP);
+      set_current_sprite(&sprites, &current_sprite, 2);
     } else {
       update_background(&background, w, h, IDLE);
       set_current_sprite(&sprites, &current_sprite, 0);
-      update_sprite(&current_sprite, w, h, IDLE, &frame);
     }
+
+    update_sprite(&current_sprite, w, h, MOVE_RIGHT, &frame);
     draw_background(&background);
     draw_sprite(&current_sprite);
+
     EndDrawing();
   }
 

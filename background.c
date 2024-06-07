@@ -1,5 +1,6 @@
 #include "background.h"
 #include "util.h"
+#include <raylib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -43,6 +44,7 @@ void update_background(Backgrounds *background, int screenwidth,
       background->items[i].source.x -= GetFrameTime() * 100;
     if (instruction == MOVE_RIGHT)
       background->items[i].source.x += GetFrameTime() * 100;
+
     background->items[i].destination.width = screenwidth;
     background->items[i].destination.height = screenheight;
   }
